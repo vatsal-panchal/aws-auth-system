@@ -108,3 +108,43 @@ export const getCallerIdentity = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ message: "Internal server error", error: error.message });
   }
 };
+
+export const rotateAccessKey = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user.userId;
+    const newAccessKeyId = generateAccessKeyId();
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { accessKeyId: newAccessKeyId },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      message: "Access Key rotated successfully",
+      accessKeyId: user.accessKeyId,
+      arn: user.arn,
+    });
+  } catch (error: any) {
+    return res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};
+
+export const deleteAccount = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user.userId;
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ message: "IAM User deleted successfully" });
+  } catch (error: any) {
+    return res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};

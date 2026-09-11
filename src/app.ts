@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import authRoutes from "./routes/authRoutes";
+import { errorHandler, notFoundHandler } from "./middlewares/errorMiddleware";
 
 dotenv.config();
 
@@ -17,6 +18,9 @@ app.use("/api/auth", authRoutes);
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", service: "aws-auth-system" });
 });
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 connectDB().then(() => {
   app.listen(PORT, () => {
