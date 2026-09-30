@@ -56,7 +56,7 @@ npm start
 ```
 - **Response**: Returns JWT `sessionToken`.
 
-### 3. Get Caller Identity (Protected / STS Style)
+### 3. Get Caller Identity or (Protected / STS Style )
 - **GET** `/api/auth/sts/caller-identity`
 - **Headers**:
 ```http
